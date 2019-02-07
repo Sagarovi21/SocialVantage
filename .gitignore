@@ -1,0 +1,8 @@
+# ignore visual studio directory
+.vscode
+
+# ignore python virtual env
+scarpy_venv
+
+# ignore txt files
+*.txt
