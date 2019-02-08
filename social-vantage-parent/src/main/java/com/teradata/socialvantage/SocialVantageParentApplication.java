@@ -1,3 +1,12 @@
+/*
+ * Copyright (C) 2019  by Teradata Corporation.
+ * All Rights Reserved.
+ * TERADATA CONFIDENTIAL AND TRADE SECRET
+ * 
+ * @author Meeraj Kanaparthi
+ * 
+ */
+
 package com.teradata.socialvantage;
 
 import org.springframework.boot.SpringApplication;
@@ -11,4 +20,5 @@ public class SocialVantageParentApplication {
 	}
 
 }
+
 

@@ -3,7 +3,19 @@
   <mat-card-subtitle>Statistics Information</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
-    card content
+    <div class="input-container">
+      <mat-form-field>
+        <input matInput placeholder="Input">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Select">
+          <mat-option value="reviews" >Product Reviews</mat-option>
+          <mat-option value="news">News</mat-option>
+          <mat-option value="weather">weather</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="accent" >Submit</button>
   </mat-card-content>
 </mat-card>
 <mat-card>
@@ -11,6 +23,6 @@
   <mat-card-subtitle>Recent activity for analytics</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
-    card content
+    Activity Content
   </mat-card-content>
 </mat-card>
