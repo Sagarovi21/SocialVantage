@@ -48,6 +48,7 @@ import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
 import {RouterModule, Routes} from '@angular/router';
 import { SideCardComponent } from './side-card/side-card.component';
+import { ResultTableComponent } from './result-table/result-table.component';
 
 const routes: Routes = [
   {
@@ -69,7 +70,8 @@ const routes: Routes = [
     AppComponent,
     HomeComponent,
     AboutComponent,
-    SideCardComponent
+    SideCardComponent,
+    ResultTableComponent
   ],
   imports: [
     BrowserModule,
