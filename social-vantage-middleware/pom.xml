@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.teradata</groupId>
 	<artifactId>social-vantage-middleware</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>social-vantage-middleware</name>
 	<description>Social Vantage Project</description>
 

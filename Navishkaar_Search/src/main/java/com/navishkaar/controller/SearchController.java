@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.navishkaar.service.GoogleCustomSearchService;
 import com.navishkaar.service.GoogleSearchService;
 
 @RestController
@@ -15,9 +16,13 @@ public class SearchController {
 
 	@Autowired
 	private GoogleSearchService googleSearchService;
+	
+	@Autowired
+	private GoogleCustomSearchService googleCustomSearchService;
+	
 	@GetMapping("/google/{searchTerm}")
-	public Map<String, String> searchGoogle(@PathVariable("searchTerm") String searchTerm) throws IOException
+	public String searchGoogle(@PathVariable("searchTerm") String searchTerm) throws IOException
 	{
-		return googleSearchService.search(searchTerm);
+		return googleCustomSearchService.search(searchTerm).toString();
 	}
 }
