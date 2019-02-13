@@ -17,3 +17,4 @@ spring:
 name: prod-YAML
 environment: production
 allowed-origins: https://socialvantage.appcenter.ps.ac.uda.io/
+service-url: https://socialvantage.appcenter.ps.ac.uda.io/
