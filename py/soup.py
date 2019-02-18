@@ -7,7 +7,7 @@ class Reader:
         try:
             source = urllib.request.urlopen(url).read()
             soup = BeautifulSoup(source, 'html.parser' )
-            mydivs =soup.find_all('a', href=True)
+            mydivs =soup.find_all('a', { "class" : "a-link-normal" })
             for link in mydivs:
                 commonUrls.append (link['href'])
 

@@ -6,7 +6,7 @@ import time
 import multiprocessing
 import logging
 
-class Comments(scrapy.Spider):
+class pageReviews(scrapy.Spider):
     name = "ScraperWithLimit"
 
     def __init__(self, domain=None, commonUrls = [],*args, **kwargs):
@@ -21,21 +21,18 @@ class Comments(scrapy.Spider):
     def parse(self, response):
         start = time.time()
         try:
+            phone_name = response.meta['phone_name']
+            reviews = response.xpath('//div[contains(@id,"customer_review")]')
+            if os.path.exists(phone_name+'.txt'):
+                append_write = 'a'
+            else:
+                append_write = 'w'
 
-
-            for sel in response.xpath("//*[not(*)]/@id"):
-                id = sel.extract()
-                if len(id) > 0 and id.lower().find("comment") >= 0 :
-                    print(id)
-                if len(id) > 0 and id.lower().find("title") >= 0:
-                    print (id)
-                    titleId = id;
-                    path ='//*[@id="'+id+'"]'
-                    print(path)
-                    text = response.xpath(path+"/text()").extract()
-                    title =''.join(text)
-                    print('#2')
-                    print(title.replace(' ','').replace('\n',''))
+            for review in reviews:
+                review_text = ' '.join(review.xpath('.//span[contains(@data-hook,"review-body")]/text()').extract())
+                print(review_text)
+            next_page_url = response.xpath('//li[contains(@class,"a-last")]/a/@href').extract_first()
+            absolute_next_page_url = response.urljoin(next_page_url)
         except Exception as error:
             print('An error occured.')
             print(error)
