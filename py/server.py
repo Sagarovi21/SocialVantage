@@ -28,10 +28,16 @@ class Comments(scrapy.Spider):
         self.urls =commonUrls
         self.task_id = task_id
         self.data = data
+        self.taskQuery()
 
     def start_requests(self):
         count = 0
         self.cmnts = 0
+        number_pages = str(len(urls))
+        session.execute("""UPDATE mkbasedb.TaskStatus SET pages_found = ?
+                                WHERE task = ?  and task_id= ? """,
+                             (number_pages, 'webcrawl',self.task_id))
+        session.commit()
         for url in self.urls:
             count += 1
             try:
@@ -87,8 +93,10 @@ class Comments(scrapy.Spider):
         count = 0
         for review in reviews:
             review_text = ' '.join(review.xpath('.//span[contains(@data-hook,"review-body")]/text()').extract())
+            if len (phone_name) > 90:
+                phone_name = (phone_name[:90] + '...')
             if len(review_text) > 500:
-                review_text = (review_text[:500] + '..')
+                review_text = (review_text[:500] + '...')
             review_ratings = review.xpath('.//a[contains(@title,"out")]/@title').extract()
             m = re.match(r'(.*) out of (.*) stars', review_ratings[0])
             rating = float(m.group(1))
@@ -104,9 +112,20 @@ class Comments(scrapy.Spider):
         yield Request(absolute_next_page_url,callback=self.parse_phone_reviews,meta={'phone_name':phone_name})
 
     async def runQuery(self,data):
-        session.execute("""INSERT INTO mkbasedb.reviews (task_id, ObjectName, Review, Rating, TotalRating)
+        try:
+            session.execute("""INSERT INTO mkbasedb.reviews (task_id, ObjectName, Review, Rating, TotalRating)
                         VALUES (?, ?, ?, ?, ?)""",
                         data)
+            session.commit()
+            print(data)
+        except Exception as error:
+            print('An error occured run query')
+            print(error)
+
+    def taskQuery(self):
+        session.execute("""INSERT INTO mkbasedb.taskstatus (task_id, task, ObjectName, pages_found, pages_completed, comments_found, task_status)
+                        VALUES (?, ?, ?, ?, ?,?,?)""",
+                        (self.task_id, 'webcrawl', 0,0,0,0,'initiated'))
         session.commit()
 
 
@@ -123,11 +142,7 @@ def process(task_id, search_string):
 
     """app.run(port='5002')"""
     urls = Reader.readFile('https://www.amazon.in/'+search_string+'/b?ie=UTF8&node=1805560031');
-    number_pages = str(len(urls))
-    session.execute("""UPDATE mkbasedb.TaskStatus SET pages_found = ?
-                                WHERE task = ?  and task_id= ? """,
-                             (number_pages, 'webcrawl',task_id))
-    session.commit()
+    
     logging.getLogger('scrapy').setLevel(logging.WARNING)
     logging.getLogger('scrapy').propagate = False
     process = CrawlerProcess({
@@ -143,4 +158,4 @@ def process(task_id, search_string):
     print("#############################")
 
 if __name__ == '__main__':
-        process(102,'Smartphones')
+        process(104,'Smartphones')
