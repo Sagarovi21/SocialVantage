@@ -36,8 +36,8 @@ class Comments(scrapy.Spider):
             count += 1
             try:
                 self.data = ()
-                session.execute("""UPDATE mkbasedb.TaskStatus SET pages_completed = ? WHERE task = ? and task_id = ? """,
-                                         (str(count), 'webcrawl', self.task_id ))
+                session.execute("""UPDATE mkbasedb.TaskStatus SET pages_completed = ? , task_status = ?  WHERE task = ? and task_id = ? """,
+                                         (str(count), 'inprogress','webcrawl', self.task_id ))
                 session.commit()
                 yield scrapy.Request(url=url, callback=self.parse_phone_details)
                 
@@ -96,7 +96,7 @@ class Comments(scrapy.Spider):
             self.data = (self.task_id,phone_name, review_text, rating,total_rating)
             self.cmnts += 1
             self.tasks.append(asyncio.ensure_future(self.runQuery(self.data)))
-            if( count > 3):
+            if( count > 10):
                 break
             count += 1
         next_page_url = response.xpath('//li[contains(@class,"a-last")]/a/@href').extract_first()
@@ -143,4 +143,4 @@ def process(task_id, search_string):
     print("#############################")
 
 if __name__ == '__main__':
-        process(101,'Smartphones')
+        process(102,'Smartphones')
