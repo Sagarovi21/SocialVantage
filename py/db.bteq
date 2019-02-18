@@ -1,0 +1,32 @@
+database mkbasedb;
+
+create table reviews (
+	task_id integer,
+	ObjectName varchar(150),
+	Review varchar(1000),
+	Rating Decimal(3,2),
+	TotalRating Decimal(3,2)
+);
+
+insert into reviews values (1, '23','23', 3.4,5.0);
+
+drop table TaskStatus;
+
+create table TaskStatus (
+	task_id integer,
+	task varchar(20),
+	ObjectName varchar(150),
+	pages_found	integer,
+	pages_completed integer,
+	comments_found integer,
+	task_status varchar(7)
+)	UNIQUE PRIMARY INDEX ( task_id );
+
+
+insert into taskstatus (101, 'webcrawl', 0,0,0,0,'initiated');
+
+select * from taskstatus;
+
+
+
+select * from reviews;
