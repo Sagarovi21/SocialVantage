@@ -1,0 +1,19 @@
+spring:
+    profiles: local_port
+name: local_port
+environment: local_port
+allowed-origins: http://localhost:4200
+ 
+---
+spring:
+    profiles: local
+name: local
+environment: local
+allowed-origins: http://localhost
+ 
+---
+spring:
+    profiles: prod
+name: prod-YAML
+environment: production
+allowed-origins: https://socialvantage.appcenter.ps.ac.uda.io/
