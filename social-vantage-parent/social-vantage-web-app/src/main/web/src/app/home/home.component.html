@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-title>Social Vantage</mat-card-title>
+  <mat-card-subtitle>Statistics Information</mat-card-subtitle>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <div class="input-container">
+      <mat-form-field>
+        <input matInput placeholder="Input" [(ngModel)]="inputText">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-select placeholder="Select" [(ngModel)]="selectedcategory" >
+          <mat-option value="reviews" >Product Reviews</mat-option>
+          <mat-option value="news">News</mat-option>
+          <mat-option value="weather">weather</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="accent" (click)="submit()">Submit</button>
+  </mat-card-content>
+</mat-card>
+<mat-card *ngIf="output">
+  <mat-card-title>Results</mat-card-title>
+  <mat-card-subtitle>Results for {{output.input.input}}</mat-card-subtitle>
+  <mat-divider></mat-divider>
+  <mat-card-content>
+    <app-result-table [results]="output"></app-result-table>
+  </mat-card-content>
+</mat-card>

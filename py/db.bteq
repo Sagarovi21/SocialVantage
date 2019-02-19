@@ -5,7 +5,11 @@ create table reviews (
 	ObjectName varchar(150),
 	Review varchar(1000),
 	Rating Decimal(3,2),
-	TotalRating Decimal(3,2)
+	TotalRating Decimal(3,2),
+	product_details varchar(250), 
+	technial_details varchar(250),
+	feature_names varchar(250),
+	feature_values varchar(250)
 );
 
 insert into reviews values (1, '23','23', 3.4,5.0);
@@ -30,3 +34,4 @@ select * from taskstatus;
 
 
 select * from reviews;
+select count (*) from reviews where task_id = 103;
