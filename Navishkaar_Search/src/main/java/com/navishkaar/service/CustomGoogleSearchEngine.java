@@ -27,8 +27,6 @@ public class CustomGoogleSearchEngine {
 		for (String temp : spilletedSearchTerm)
 			sb.append(temp);
 		final String uri= String.format("https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&start=%d",accessKey.trim(), googleCX.trim(),sb.toString(),start);
-		/*final String uri = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDrn3sLmBU8SIGSe67LROTt-81hq6sbJ6o&cx=016303953285139242562:6-wrexhcdku&q="
-				+ sb.toString() + "&start=" + start;*/
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
