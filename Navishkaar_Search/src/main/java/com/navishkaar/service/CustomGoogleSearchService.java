@@ -62,7 +62,7 @@ public class CustomGoogleSearchService {
 					JSONObject temp = jsonArray.getJSONObject(i);
 					CustomResult result = new CustomResult();
 					result.setTitle(temp.getString("title"));
-					result.setUrl(temp.getString("formattedUrl"));
+					result.setUrl(temp.getString("link"));
 					try {
 						JSONArray array;
 						if ((array = temp.getJSONObject("pagemap").getJSONArray("cse_thumbnail")) != null) {
