@@ -3,6 +3,7 @@ package com.navishkaar.service;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -13,6 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CustomGoogleSearchEngine {
+	@Value("${google.key}")
+	private String accessKey;
+	@Value("${google.cx}")
+	private String googleCX;
 
 	public String search(String searchTerm, int start) throws IOException {
 		if (start > 100)
@@ -21,8 +26,9 @@ public class CustomGoogleSearchEngine {
 		StringBuilder sb = new StringBuilder("");
 		for (String temp : spilletedSearchTerm)
 			sb.append(temp);
-		final String uri = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDrn3sLmBU8SIGSe67LROTt-81hq6sbJ6o&cx=016303953285139242562:6-wrexhcdku&q="
-				+ sb.toString() + "&start=" + start;
+		final String uri= String.format("https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&start=%d",accessKey.trim(), googleCX.trim(),sb.toString(),start);
+		/*final String uri = "https://www.googleapis.com/customsearch/v1?key=AIzaSyDrn3sLmBU8SIGSe67LROTt-81hq6sbJ6o&cx=016303953285139242562:6-wrexhcdku&q="
+				+ sb.toString() + "&start=" + start;*/
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));

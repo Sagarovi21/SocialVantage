@@ -1,6 +1,8 @@
 package com.navishkaar.service;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import twitter4j.Query;
 import twitter4j.QueryResult;
@@ -14,15 +16,25 @@ import twitter4j.conf.ConfigurationBuilder;
 public class TwitterSearchService {
 
 	private static Twitter twitter = null;
-
-	public static Twitter getTwitterinstance() {
+	@Value("${twitter.consumerKey}")
+	private String consumerKey;
+	@Value("${twitter.consumerSecret}")
+	private String consumerSecret;
+	@Value("${twitter.accessToken}")
+	private String accessToken;
+	@Value("${twitter.accessTokenSecret}")
+	private String accessTokenSecret;
+	
+	public Twitter getTwitterinstance() {
 		if (twitter != null)
 			return twitter;
+		System.out.println("count");
+		
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthConsumerKey("JZupFU1LR8DVnH1CVPWEsCP2z")
-				.setOAuthConsumerSecret("IjQQPYOQceDYT70nf4IrRZ0VSjM9LAtyORHwblX20xbuXk1epi")
-				.setOAuthAccessToken("301682821-EFsP8uSCvuYk4CvoHTmCLrh7BK7kQxCMg8LkGzhj")
-				.setOAuthAccessTokenSecret("EFUmjoUU1AQs0SI7VE7WsweeVUg7UN4goTDabrK9VsQRc");
+		cb.setDebugEnabled(true).setOAuthConsumerKey(consumerKey.trim())
+				.setOAuthConsumerSecret(consumerSecret.trim())
+				.setOAuthAccessToken(accessToken.trim())
+				.setOAuthAccessTokenSecret(accessTokenSecret.trim());
 		TwitterFactory tf = new TwitterFactory(cb.build());
 		twitter = tf.getInstance();
 		return twitter;
