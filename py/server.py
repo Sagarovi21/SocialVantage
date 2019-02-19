@@ -93,10 +93,10 @@ class Comments(scrapy.Spider):
         count = 0
         for review in reviews:
             review_text = ' '.join(review.xpath('.//span[contains(@data-hook,"review-body")]/text()').extract())
-            if len (phone_name) > 90:
-                phone_name = (phone_name[:90] + '...')
-            if len(review_text) > 500:
-                review_text = (review_text[:500] + '...')
+            if len (phone_name) > 120:
+                phone_name = phone_name[:120]
+            if len(review_text) > 900:
+                review_text = review_text[:900]
             review_ratings = review.xpath('.//a[contains(@title,"out")]/@title').extract()
             m = re.match(r'(.*) out of (.*) stars', review_ratings[0])
             rating = float(m.group(1))
@@ -158,4 +158,4 @@ def process(task_id, search_string):
     print("#############################")
 
 if __name__ == '__main__':
-        process(104,'Smartphones')
+        process(105,'camera')
