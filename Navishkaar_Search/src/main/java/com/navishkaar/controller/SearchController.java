@@ -30,7 +30,6 @@ public class SearchController {
 	private FacebookSearchService facebookSearchService;
 
 	@GetMapping(path = "/google/{searchTerm}", produces = "application/json")
-
 	public String searchGoogle(@PathVariable("searchTerm") String searchTerm) throws IOException {
 		return customGoogleSearchService.search(searchTerm).toString();
 	}
