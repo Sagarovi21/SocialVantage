@@ -23,6 +23,13 @@
   <mat-card-subtitle>Results for {{output.input.input}}</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
-    <app-result-table [results]="output"></app-result-table>
+    <ul>
+      <li>
+        Generated Task Id : {{ output.taskId }}
+      </li>
+      <li>
+        Current Status : {{ output.status }}
+      </li>
+    </ul>
   </mat-card-content>
 </mat-card>

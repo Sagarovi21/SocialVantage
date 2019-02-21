@@ -1,6 +1,14 @@
 {
-  "/search": {
-    "target": "https://socialvantagemiddleware.appcenter.ps.ac.uda.io/search",
+  "/asyncSearch": {
+    "target": "https://socialvantagemiddleware.appcenter.ps.ac.uda.io/asyncSearch",
     "secure": true
+  },
+  "/tasks": {
+    "target": "https://socialvantagemiddleware.appcenter.ps.ac.uda.io/tasks",
+    "secure": false
+  },
+  "/task": {
+    "target": "https://socialvantagemiddleware.appcenter.ps.ac.uda.io/tasks",
+    "secure": false
   }
 }

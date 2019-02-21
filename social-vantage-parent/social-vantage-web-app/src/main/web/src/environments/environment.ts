@@ -3,7 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  apiUrl: 'http://localhost/search',
+  apiUrl: 'http://localhost:4200/asyncSearch',
+  apiTaskUrl: 'http://localhost:4200/tasks',
+  apiTaskIdUrl: 'http://localhost:4200/task',
   production: false
 };
 

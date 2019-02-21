@@ -1,27 +1,19 @@
 <mat-card>
-  <mat-card-title>Alerts</mat-card-title>
-  <mat-card-subtitle>Items requiring attention</mat-card-subtitle>
+  <mat-card-title>Tasks</mat-card-title>
+  <mat-card-subtitle>List of Tasks</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
-    card content
+    <app-task-status-list (tasksForIdEmitter)="onMoreTask($event)"></app-task-status-list>
   </mat-card-content>
   <mat-divider></mat-divider>
-  <mat-card-actions>
-    <a mat-button color="accent" class="text-upper" [routerLink]="['/logs']">
-      <span>View More</span>
-    </a>
-  </mat-card-actions>
+
 </mat-card>
-<mat-card>
-  <mat-card-title>Favorites</mat-card-title>
-  <mat-card-subtitle>Your favorite products</mat-card-subtitle>
+<mat-card *ngIf="taskListForId">
+  <mat-card-title>Current Status</mat-card-title>
+  <mat-card-subtitle>Status of Task : {{ taskListForId[0].taskId }} For input : {{ taskListForId[0].search }} ( {{ taskListForId[0].category }} )</mat-card-subtitle>
   <mat-divider></mat-divider>
   <mat-card-content>
-    card content
+    <app-task-status-details [taskDetails]="taskListForId"></app-task-status-details>
   </mat-card-content>
-  <mat-card-actions>
-    <a mat-button color="accent" class="text-upper" [routerLink]="['/product']">
-      <span>View More</span>
-    </a>
-  </mat-card-actions>
+
 </mat-card>

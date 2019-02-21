@@ -49,6 +49,8 @@ import { AboutComponent } from './about/about.component';
 import {RouterModule, Routes} from '@angular/router';
 import { SideCardComponent } from './side-card/side-card.component';
 import { ResultTableComponent } from './result-table/result-table.component';
+import { TaskStatusListComponent } from './task-status-list/task-status-list.component';
+import { TaskStatusDetailsComponent } from './task-status-details/task-status-details.component';
 
 const routes: Routes = [
   {
@@ -71,7 +73,9 @@ const routes: Routes = [
     HomeComponent,
     AboutComponent,
     SideCardComponent,
-    ResultTableComponent
+    ResultTableComponent,
+    TaskStatusListComponent,
+    TaskStatusDetailsComponent
   ],
   imports: [
     BrowserModule,
