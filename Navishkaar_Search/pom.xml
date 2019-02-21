@@ -82,6 +82,20 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.tonicsoft.ebay/ebaysdkcore -->
+		<dependency>
+			<groupId>org.tonicsoft.ebay</groupId>
+			<artifactId>ebaysdkcore</artifactId>
+			<version>981.0.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.mashape.unirest/unirest-java -->
+		<dependency>
+			<groupId>com.mashape.unirest</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>1.4.9</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
