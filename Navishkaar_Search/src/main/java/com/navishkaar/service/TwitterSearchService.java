@@ -1,6 +1,7 @@
 package com.navishkaar.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -41,18 +42,16 @@ public class TwitterSearchService {
 
 	}
 
-	public List<Status> search(String searchTerm) throws TwitterException {
+	public List<String> search(String searchTerm) throws TwitterException {
 
 		Twitter twitter = getTwitterinstance();
 		Query query = new Query(searchTerm);
 		query.setLang("en");
 		query.setCount(100);
 		QueryResult result = twitter.search(query);
-
-		return result.getTweets();
-		/*
-		 * .stream() .map(item -> item.getText()) .collect(Collectors.toList());
-		 */
+		return result.getTweets()
+		  .stream() .map(item -> item.getText()) .collect(Collectors.toList());
+		 
 	}
 
 }

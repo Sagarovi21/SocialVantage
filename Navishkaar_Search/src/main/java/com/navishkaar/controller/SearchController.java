@@ -1,6 +1,7 @@
 package com.navishkaar.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -11,15 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.navishkaar.core.CustomResult;
+import com.navishkaar.core.EbayResponse;
 import com.navishkaar.service.CustomGoogleSearchService;
+import com.navishkaar.service.EBaySearchService;
 import com.navishkaar.service.FacebookSearchService;
 import com.navishkaar.service.TwitterSearchService;
 
 import facebook4j.FacebookException;
 import facebook4j.Post;
 import facebook4j.ResponseList;
-import twitter4j.Status;
 import twitter4j.TwitterException;
 
 @CrossOrigin(origins = "*", allowedHeaders = "*")
@@ -34,6 +37,8 @@ public class SearchController {
 	private TwitterSearchService twitterSearchService;
 	@Autowired
 	private FacebookSearchService facebookSearchService;
+	@Autowired
+	private EBaySearchService eBaySearchService;
 
 	@GetMapping(path = "/google/{searchTerm}", produces = "application/json")
 	public String searchGoogle(@PathVariable("searchTerm") String searchTerm) throws IOException {
@@ -57,5 +62,11 @@ public class SearchController {
 	public ResponseList<Post> searchFacebook(@PathVariable("searchTerm") String searchTerm)
 			throws TwitterException, FacebookException {
 		return facebookSearchService.search(searchTerm);
+	}
+
+	@GetMapping(path = "/ebay/v1/{searchTerm}", produces = "application/json")
+	public List<EbayResponse> searchEBay(@PathVariable("searchTerm") String searchTerm)
+			throws TwitterException, FacebookException, UnsupportedEncodingException, UnirestException {
+		return eBaySearchService.search(searchTerm);
 	}
 }
