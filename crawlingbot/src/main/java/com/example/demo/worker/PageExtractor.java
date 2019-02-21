@@ -108,14 +108,20 @@ public class PageExtractor implements Callable<List<Reviews>>{
 			
 			reviews = doc.select("[class*='review']");
 			extractReviews( list, rating_Patterns, reviews);
-			if(list.size() == 0) {
+			if(list.size() < 2) {
 				reviews = doc.select("[class*='cmnt']");
 				extractReviews( list, rating_Patterns, reviews);
 			}
 			result = new ArrayList<>();
 			for(Review review : list) {
+				String titleText = title.replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
+				if(titleText.length() > 130) { titleText = titleText.substring(0, 130);}
+				String reviewText = review.getReview().replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
+				if(reviewText.length() > 990) { reviewText = reviewText.substring(0, 990);}
+				feature = feature.replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
+				if(feature.length() > 230) { feature = feature.substring(0, 230);}
 				result.add(new 
-						Reviews(1, title, review.getReview(), review.getRating(), review.getTotalRating(), (price == null ? 0.0d: Double.parseDouble(price)),
+						Reviews(1, titleText,"", reviewText, review.getRating(), review.getTotalRating(), (price == null ? 0.0d: Double.parseDouble(price)),
 								feature, feature)) ;
 						
 			
@@ -135,6 +141,7 @@ public class PageExtractor implements Callable<List<Reviews>>{
 		for(Element review : reviews) {
 			String rating = null;
 			String total_rating = null;
+			String comments = null;
 			//logger.info(review.toString());
 			for(Element children : review.children()) {
 				//logger.info(children.toString());
@@ -175,12 +182,12 @@ public class PageExtractor implements Callable<List<Reviews>>{
 				}
 				
 				if(rating != null) {
-					logger.info(rating +" : "+total_rating+ " : "+children.text());
-					list.add(new Review(children.text(),Float.parseFloat(rating),Float.parseFloat(total_rating)));
+					comments += children.text();
 				}
 			}
 			if(rating != null) {
-				break;
+				logger.info(rating +" : "+total_rating+ " : "+comments);
+				list.add(new Review(comments,Float.parseFloat(rating),Float.parseFloat(total_rating)));
 			}
 		} 
 		
@@ -208,6 +215,22 @@ public class PageExtractor implements Callable<List<Reviews>>{
 			features = doc.select("div[id*='specific']");
 			for(Element feature : features) {
 				feature.children().forEach((e)->{ specs.add(e.text());});
+			}
+		}
+		if(features == null || features.size() == 0) {
+			features = doc.select("div[class*='detail']");
+			for(Element feature : features.select(":not(:has(*)")) {
+				if(feature.hasText()) {
+				specs.add(feature.text());
+				}
+			}
+		}
+		if(features == null || features.size() == 0) {
+			features = doc.select("div[id*='detail']");
+			for(Element feature : features.select(":not(:has(*)")) {
+				if(feature.hasText()) {
+				specs.add(feature.text());
+				}
 			}
 		}
 	}
@@ -245,7 +268,10 @@ public class PageExtractor implements Callable<List<Reviews>>{
 		String url1 ="https://gadgets.ndtv.com/samsung-galaxy-a9s-5709";
 		String url2 ="https://www.digit.in/mobile-phones/xiaomi-mi-a2-price-125589.html";
 		String url3 = "https://shop.gadgetsnow.com/smartphones/lenovo-k8-note-64gb-black-4gb-ram-/10021/p_G28690";
-		PageExtractor pageExtractor = new PageExtractor("https://gadgets.ndtv.com/",url3);
+		String url4 = "https://gadgets.ndtv.com/vivo-z3i-standard-edition-8950";
+		String url5 ="https://gadgets.ndtv.com/samsung-m20-galaxy-8938";
+		String url6 ="https://www.consumerreports.org/products/smart-phone/sony-xperia-xz1-394729/overview/";
+		PageExtractor pageExtractor = new PageExtractor("https://gadgets.ndtv.com/",url6);
 		pageExtractor.run();
 	}
 

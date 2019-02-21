@@ -23,6 +23,10 @@ public class DataInputRequest implements Input{
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "DataInputRequest [input=" + input + ", category=" + category + "]";
+	}
 	
 }

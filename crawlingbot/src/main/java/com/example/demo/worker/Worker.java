@@ -77,19 +77,16 @@ public class Worker {
 	@Async("threadPoolTaskExecutor")
 	public void runFromAnotherThreadPool(String url, List<String> links) {
 		logger.info("Execute method asynchronously with configured executor" + Thread.currentThread().getName());
-		ExecutorService executor = Executors.newFixedThreadPool(50);
+		ExecutorService executor = Executors.newFixedThreadPool(120);
 		List<Future<List<Reviews>>> list = new ArrayList<Future<List<Reviews>>>();
 		links.forEach((link) -> {
 			Future<List<Reviews>> future = executor.submit(new PageExtractor(url,link));
-			try {
-				logger.info("&&&&&&&&&&&&&&&&&&&&"+future.get().size());
-			} catch (InterruptedException | ExecutionException e) {
-				logger.error("error during extract final calls",e);
-			}
 			list.add(future);
+			 
 		});
 		
-		 for(Future<List<Reviews>> fut : list){ persistReviews(fut); }
+		for(Future<List<Reviews>> fut : list){ persistReviews(fut); }
+		 
 		
 		executor.shutdown();
 		try {
@@ -103,7 +100,14 @@ public class Worker {
 	@Transactional
 	private void persistReviews(Future<List<Reviews>> fut) {
 		try {
-			fut.get().forEach(review -> { logger.info(review.toString()); reviewRepository.save(review);});
+			List<Reviews> reviews= fut.get();
+			logger.info("*****************************"+reviews.size());
+			reviews.forEach(review -> { 
+						review.setTaskId(777);
+						review.setCategory("smartphone");
+						logger.info(review.toString()); 
+						reviewRepository.save(review);
+					});
 			
 		} catch (InterruptedException | ExecutionException e) {
 		    e.printStackTrace();

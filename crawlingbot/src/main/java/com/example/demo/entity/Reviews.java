@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "reviews")
 public class Reviews {
 
-	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	@Id @GeneratedValue(strategy=GenerationType.IDENTITY, generator="native")
 	@Column(name = "rec_num", nullable = false)
     private int rec_num;
 	
@@ -20,6 +20,9 @@ public class Reviews {
 	
 	@Column(name = "ObjectName", nullable = false, length = 150)
     private String objectName;
+	
+	@Column(name = "Category", nullable = false, length = 150)
+    private String category;
 	
 	@Column(name = "Review", length = 1000)
     private String review;
@@ -44,6 +47,14 @@ public class Reviews {
 	
 	@Column(name = "feature_values", length = 250)
     private String featureValues;
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
 
 	public int getTaskId() {
 		return taskId;
@@ -125,11 +136,12 @@ public class Reviews {
 		this.featureValues = featureValues;
 	}
 
-	public Reviews(int taskId, String objectName, String review, float rating, float totalRating, double price,
+	public Reviews(int taskId, String objectName, String category,String review, float rating, float totalRating, double price,
 			String featureNames, String featureValues) {
 		super();
 		this.taskId = taskId;
 		this.objectName = objectName;
+		this.category = category;
 		this.review = review;
 		this.rating = rating;
 		this.totalRating = totalRating;

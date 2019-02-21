@@ -15,8 +15,8 @@ from multiprocessing import Pool
 
 app = Flask(__name__)
 api = Api(app)
-udaExec = teradata.UdaExec (appName="mkbasedb", version="1.0",logConsole=False)
-session = udaExec.connect(method="odbc", system="sdt20168.labs.teradata.com",username="cim", password="cim")
+udaExec = teradata.UdaExec (appName="mkdb", version="1.0",logConsole=False)
+session = udaExec.connect(method="odbc", system="tdap863t1.labs.teradata.com",username="alice", password="alice")
 urls=[]
 data = []
 class Comments(scrapy.Spider):
@@ -35,7 +35,7 @@ class Comments(scrapy.Spider):
         count = 0
         self.cmnts = 0
         number_pages = str(len(urls))
-        session.execute("""UPDATE mkbasedb.TaskStatus SET pages_found = ?
+        session.execute("""UPDATE mkdb.TaskStatus SET pages_found = ?
                                 WHERE task = ?  and task_id= ? """,
                              (number_pages, 'webcrawl',self.task_id))
         session.commit()
@@ -43,7 +43,7 @@ class Comments(scrapy.Spider):
             count += 1
             try:
                 self.data = ()
-                session.execute("""UPDATE mkbasedb.TaskStatus SET pages_completed = ? , task_status = ?  WHERE task = ? and task_id = ? """,
+                session.execute("""UPDATE mkdb.TaskStatus SET pages_completed = ? , task_status = ?  WHERE task = ? and task_id = ? """,
                                          (str(count), 'inprogress','webcrawl', self.task_id ))
                 session.commit()
                 yield scrapy.Request(url=url, callback=self.parse_phone_details)
@@ -53,7 +53,7 @@ class Comments(scrapy.Spider):
                 print(error)
         
         print("**********************************************"+ str(self.cmnts))
-        session.execute("""UPDATE mkbasedb.TaskStatus SET comments_found = ?, task_status = ?
+        session.execute("""UPDATE mkdb.TaskStatus SET comments_found = ?, task_status = ?
                                 WHERE task = ? and task_id = ? """,
                                 (self.cmnts, 'done', 'webcrawl', self.task_id))
         session.commit()
@@ -130,7 +130,7 @@ class Comments(scrapy.Spider):
 
     async def runQuery(self,data):
         try:
-            session.execute("""INSERT INTO mkbasedb.reviews (task_id, ObjectName, Review, Rating, TotalRating, product_details, technial_details,feature_names, feature_values )
+            session.execute("""INSERT INTO mkdb.reviews (task_id, ObjectName, Review, Rating, TotalRating, product_details, technial_details,feature_names, feature_values )
                         VALUES (?, ?, ?, ?, ?, ? , ? , ? , ?)""",
                         data)
             session.commit()
@@ -141,7 +141,7 @@ class Comments(scrapy.Spider):
             print(self.urls)
 
     def taskQuery(self):
-        session.execute("""INSERT INTO mkbasedb.taskstatus (task_id, task, ObjectName, pages_found, pages_completed, comments_found, task_status)
+        session.execute("""INSERT INTO mkdb.taskstatus (task_id, task, ObjectName, pages_found, pages_completed, comments_found, task_status)
                         VALUES (?, ?, ?, ?, ?,?,?)""",
                         (self.task_id, 'webcrawl', len(self.urls),0,0,0,'initiated'))
         session.commit()
@@ -167,7 +167,7 @@ def process(task_id, search_string):
         'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)'
     })
 
-    session.execute("""INSERT INTO mkbasedb.taskstatus (task_id, task, ObjectName, pages_found, pages_completed, comments_found, task_status)
+    session.execute("""INSERT INTO mkdb.taskstatus (task_id, task, ObjectName, pages_found, pages_completed, comments_found, task_status)
                         VALUES (?, ?, ?, ?, ?,?,?)""",
                         (task_id, 'webcrawl', len(urls),0,0,0,'initiated'))
     session.commit()
@@ -181,4 +181,4 @@ def process(task_id, search_string):
     print("#############################")
 
 if __name__ == '__main__':
-        process(165,'smartphone')
+        process(777,'smartphone')

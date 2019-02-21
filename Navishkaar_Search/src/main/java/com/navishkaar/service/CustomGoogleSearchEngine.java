@@ -3,6 +3,8 @@ package com.navishkaar.service;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -14,12 +16,15 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class CustomGoogleSearchEngine {
+	private static Logger logger = LoggerFactory.getLogger(CustomGoogleSearchService.class);
+	
 	@Value("${google.key}")
 	private String accessKey;
 	@Value("${google.cx}")
 	private String googleCX;
 
 	public String search(String searchTerm, int start) throws IOException {
+		logger.info("calling rest template"+start);
 		if (start > 100)
 			return null;
 		String[] spilletedSearchTerm = searchTerm.split(" ");

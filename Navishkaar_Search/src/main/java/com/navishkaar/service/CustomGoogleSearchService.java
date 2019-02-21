@@ -14,6 +14,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ import com.navishkaar.core.Image;
 
 @Service
 public class CustomGoogleSearchService {
+	
+	private static Logger logger = LoggerFactory.getLogger(CustomGoogleSearchService.class);
+	
 	@Autowired
 	CustomGoogleSearchEngine customGoogleSearchEngine;
 
@@ -29,9 +34,12 @@ public class CustomGoogleSearchService {
 	private static int num = 100;
 
 	public JSONObject search(String searchTerm) throws IOException {
+		logger.info("Search: "+searchTerm);
 		Map<String, String> searchResults = new HashMap<>();
 		String searchURL = GOOGLE_SEARCH_URL + "?q=" + searchTerm + "&num=" + num;
-		Document doc = Jsoup.connect(searchURL).userAgent("Mozilla/5.0").get();
+		Document doc = Jsoup.connect(searchURL).userAgent(
+				  "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+				.timeout(5000).get();
 		Elements results = doc.select("h3.r > a");
 
 		for (Element result : results) {

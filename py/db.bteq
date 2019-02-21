@@ -1,30 +1,48 @@
 database mkbasedb;
 
 create table reviews (
+	rec_num INTEGER GENERATED ALWAYS AS IDENTITY
+	(START WITH 1 
+	INCREMENT BY 1 
+	MINVALUE -2147483647 
+	MAXVALUE 2147483647 
+	NO CYCLE),
 	task_id integer,
 	ObjectName varchar(150),
+	Category varchar(150),
 	Review varchar(1000),
-	Rating Decimal(3,2),
-	TotalRating Decimal(3,2),
+	Rating Decimal(4,2),
+	TotalRating Decimal(4,2),
+	price Decimal(12,3),
 	product_details varchar(250), 
 	technial_details varchar(250),
 	feature_names varchar(250),
 	feature_values varchar(250)
 );
 
+
 insert into reviews values (1, '23','23', 3.4,5.0);
 
 drop table TaskStatus;
 
 create table TaskStatus (
+	rec_num INTEGER GENERATED ALWAYS AS IDENTITY
+	(START WITH 1 
+	INCREMENT BY 1 
+	MINVALUE -2147483647 
+	MAXVALUE 2147483647 
+	NO CYCLE),
 	task_id integer,
 	task varchar(20),
+	search varchar(150),
+	category varchar(150),
 	ObjectName varchar(150),
 	pages_found	integer,
 	pages_completed integer,
 	comments_found integer,
 	task_status varchar(7)
-)	UNIQUE PRIMARY INDEX ( task_id );
+);
+
 
 
 insert into taskstatus (101, 'webcrawl', 0,0,0,0,'initiated');

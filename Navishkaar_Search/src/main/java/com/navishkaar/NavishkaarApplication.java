@@ -11,4 +11,5 @@ public class NavishkaarApplication {
 	public static void main(String[] args) throws IOException {
 		SpringApplication.run(NavishkaarApplication.class, args);
 	}
+	
 }
