@@ -1,0 +1,14 @@
+{
+  "/asyncSearch": {
+    "target": "http://oldmac:8090/",
+    "secure": false
+  },
+  "/tasks": {
+    "target": "http://oldmac:8090/",
+    "secure": false
+  },
+  "/task": {
+    "target": "http://oldmac:8090/",
+    "secure": false
+  }
+}
