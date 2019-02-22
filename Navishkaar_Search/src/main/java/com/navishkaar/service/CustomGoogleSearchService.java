@@ -33,7 +33,7 @@ public class CustomGoogleSearchService {
 	private static final String GOOGLE_SEARCH_URL = "https://www.google.com/search";
 	private static int num = 100;
 
-	public JSONObject search(String searchTerm) throws IOException {
+	public Map<String, String> search(String searchTerm) throws IOException {
 		logger.info("Search: "+searchTerm);
 		Map<String, String> searchResults = new HashMap<>();
 		String searchURL = GOOGLE_SEARCH_URL + "?q=" + searchTerm + "&num=" + num;
@@ -48,7 +48,7 @@ public class CustomGoogleSearchService {
 			String linkText = result.text();
 			searchResults.put(linkText, linkHref);
 		}
-		return new JSONObject(searchResults);
+		return searchResults;
 	}
 
 	public String searchGoogleCustom1(String searchTerm) throws Exception {

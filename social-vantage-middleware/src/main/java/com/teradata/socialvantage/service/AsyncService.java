@@ -26,11 +26,11 @@ public class AsyncService {
     }
  
     @Async("asyncExecutor")
-    public CompletableFuture<Map<String,String>> getGoogleSearch(String searchString) 
+    public CompletableFuture<String> getGoogleSearch(String searchString) 
     {
     	logger.info("getEmployeeName starts");
  
-        Map<String,String> mapUrls = restTemplate.getForObject("http://localhost/search/google/"+searchString, Map.class);
+       String mapUrls = restTemplate.getForObject("http://localhost/search/google/"+searchString, String.class);
  
         logger.info("employeeNameData, {}", mapUrls);
        

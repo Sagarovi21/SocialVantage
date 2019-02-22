@@ -21,6 +21,12 @@ public class TaskStatus {
 	@Column(name = "task", nullable = false, length = 20)
     private String task;
 	
+	@Column(name = "idx")
+    private int index;
+	
+	@Column(name = "subidx")
+    private int subIndex;
+	
 	@Column(name = "search", length = 150)
     private String search;
 	
@@ -38,6 +44,22 @@ public class TaskStatus {
 	
 	@Column(name = "task_status",length = 7)
     private String taskStatus;
+	
+	public int getIndex() {
+		return index;
+	}
+
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	public int getSubIndex() {
+		return subIndex;
+	}
+
+	public void setSubIndex(int subIndex) {
+		this.subIndex = subIndex;
+	}
 
 	public int getRec_num() {
 		return rec_num;

@@ -22,6 +22,8 @@ public class SocialVantageMiddlewareApplication {
 		SpringApplication.run(SocialVantageMiddlewareApplication.class, args);
 	}
 	
+	
+	
 	@Bean(name = "asyncExecutor")
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

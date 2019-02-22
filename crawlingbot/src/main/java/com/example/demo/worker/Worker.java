@@ -20,13 +20,20 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.example.demo.entity.Reviews;
+import com.example.demo.entity.TaskStatus;
 import com.example.demo.jpa.ReviewRepository;
+import com.example.demo.jpa.TaskStatusRepository;
 
-@Component
+@Component()
+@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE, 
+proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class Worker {
 
 	private static Logger logger = LoggerFactory.getLogger(Worker.class);
@@ -35,9 +42,20 @@ public class Worker {
 	@Autowired
 	private ReviewRepository reviewRepository;
 	
+	@Autowired
+	private TaskStatusRepository taskStatusRepository;
 	
+	private void updateTaskStatus(int taskId, String searchTerm, int pagesize,int index) {
+		String task ="Google_Crawl";
+		String status = "Submit";
+		TaskStatus taskStatus = new TaskStatus(taskId, task, status);
+		taskStatus.setSearch(searchTerm);
+		taskStatus.setIndex(index);
+		taskStatus.setPagesFound(pagesize);
+		taskStatusRepository.save(taskStatus);
+	}
 
-	public void dowork(String url) {
+	public void dowork(String url, int taskId, String searchString, int index) {
 		logger.info("URL :" + url);
 		Map<String, List<String>> map = new HashMap<>();
 		try {
@@ -47,11 +65,13 @@ public class Worker {
 		} catch (IOException e) {
 			logger.error("IOException in url parsing", e);
 		}
-		map.forEach((k, v) -> {
-			runFromAnotherThreadPool(k, v);
-		});
-		logger.info(
-				"##################### Excution Initiated ###########################################################");
+		int counter = 0;
+		for(Map.Entry<String,List<String>> entry: map.entrySet()) {
+			runFromAnotherThreadPool(entry.getKey(), entry.getValue(), taskId, searchString,  index,counter);
+			counter++;
+		}
+		
+		updateTaskStatus(taskId,searchString,map.size(),index);
 	}
 
 	private void getAllLinks(String url, Map<String, List<String>> map) throws IOException {
@@ -75,7 +95,7 @@ public class Worker {
 	}
 
 	@Async("threadPoolTaskExecutor")
-	public void runFromAnotherThreadPool(String url, List<String> links) {
+	public void runFromAnotherThreadPool(String url, List<String> links, int taskId, String searchString, int index, int subindex) {
 		logger.info("Execute method asynchronously with configured executor" + Thread.currentThread().getName());
 		ExecutorService executor = Executors.newFixedThreadPool(120);
 		List<Future<List<Reviews>>> list = new ArrayList<Future<List<Reviews>>>();
@@ -85,7 +105,7 @@ public class Worker {
 			 
 		});
 		
-		for(Future<List<Reviews>> fut : list){ persistReviews(fut); }
+		for(Future<List<Reviews>> fut : list){ persistReviews(fut, taskId, searchString, index,  subindex); }
 		 
 		
 		executor.shutdown();
@@ -98,20 +118,35 @@ public class Worker {
 	}
 
 	@Transactional
-	private void persistReviews(Future<List<Reviews>> fut) {
+	private void persistReviews(Future<List<Reviews>> fut, int taskId, String searchString,int index,int subindex) {
 		try {
 			List<Reviews> reviews= fut.get();
-			logger.info("*****************************"+reviews.size());
+			if(reviews !=null && reviews.size() > 0) {
 			reviews.forEach(review -> { 
-						review.setTaskId(777);
-						review.setCategory("smartphone");
+						review.setTaskId(taskId);
+						review.setCategory(searchString);
 						logger.info(review.toString()); 
-						reviewRepository.save(review);
+						
 					});
-			
+			reviewRepository.saveAll(reviews);
+			updateTaskStatusIdxCmnts(taskId,searchString,index,subindex,reviews.size());
+			}
 		} catch (InterruptedException | ExecutionException e) {
 		    e.printStackTrace();
 		}
+	}
+
+	private void updateTaskStatusIdxCmnts(int taskId, String searchString, int index, int subindex, int size) {
+		String task ="Google_Crawl";
+		String status = "Done";
+		TaskStatus taskStatus = new TaskStatus(taskId, task, status);
+		taskStatus.setSearch(searchString);
+		taskStatus.setSearch(searchString);
+		taskStatus.setIndex(index);
+		taskStatus.setSubIndex(subindex);
+		taskStatus.setCommentsFound(size);
+		taskStatusRepository.save(taskStatus);// TODO Auto-generated method stub
+		
 	}
 
 	public static void main(String[] args) throws IOException {

@@ -23,25 +23,30 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!-- <exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-logging</artifactId>
-				</exclusion>
-			</exclusions> -->
 		</dependency>
-		
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.teradata.jdbc</groupId>
+			<artifactId>terajdbc4</artifactId>
+			<version>16.20.00.10</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/jars/terajdbc4.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.teradata.jdbc</groupId>
+			<artifactId>tdgssconfig</artifactId>
+			<version>16.20.00.10</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/jars/tdgssconfig.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>

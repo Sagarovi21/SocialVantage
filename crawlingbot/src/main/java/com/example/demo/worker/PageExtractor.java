@@ -1,6 +1,7 @@
 package com.example.demo.worker;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -18,10 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.example.demo.entity.Reviews;
-import com.example.demo.model.ResultData;
 import com.example.demo.model.Review;
+
+import opennlp.tools.postag.POSModel;
+import opennlp.tools.postag.POSTaggerME;
+import opennlp.tools.tokenize.SimpleTokenizer;
 
 @Component
 @Scope("prototype")
@@ -99,7 +104,7 @@ public class PageExtractor implements Callable<List<Reviews>>{
 			List<String> specs = new ArrayList<>();
 			List<Review> list = new ArrayList<>();
 			getFeatures(doc, specs);
-			String feature = String.join(" | ", specs);
+			String feature = String.join(" ", specs);
 			logger.info("feature : "+feature);
 			List<Pattern> rating_Patterns = new ArrayList<>();
 			rating_Patterns.add(Pattern.compile("(\\d|\\d.\\d) out of (\\d|\\d.\\d)"));
@@ -113,13 +118,16 @@ public class PageExtractor implements Callable<List<Reviews>>{
 				extractReviews( list, rating_Patterns, reviews);
 			}
 			result = new ArrayList<>();
+			feature = feature.replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
+			feature= processNLP(feature);
 			for(Review review : list) {
 				String titleText = title.replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
 				if(titleText.length() > 130) { titleText = titleText.substring(0, 130);}
 				String reviewText = review.getReview().replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
 				if(reviewText.length() > 990) { reviewText = reviewText.substring(0, 990);}
-				feature = feature.replaceAll("[^A-Za-z0-9()\\s\\.\\[\\]]", "");
-				if(feature.length() > 230) { feature = feature.substring(0, 230);}
+				
+				
+				logger.info(feature);
 				result.add(new 
 						Reviews(1, titleText,"", reviewText, review.getRating(), review.getTotalRating(), (price == null ? 0.0d: Double.parseDouble(price)),
 								feature, feature)) ;
@@ -134,6 +142,51 @@ public class PageExtractor implements Callable<List<Reviews>>{
 			logger.error("IOException in url parsing", e);
 		}
 		
+	}
+
+
+	private String processNLP(String feature) {
+
+	    SimpleTokenizer tokenizer = SimpleTokenizer.INSTANCE;
+	    List<String> fet =new ArrayList<>(); 
+	    String[] tokens = tokenizer.tokenize(feature);
+	    InputStream inputStreamPOSTagger = getClass()
+	      .getResourceAsStream("/models/en-pos-maxent.bin");
+	    POSModel posModel;
+		try {
+			
+			posModel = new POSModel(inputStreamPOSTagger);
+			POSTaggerME posTagger = new POSTaggerME(posModel);
+			String tags[] = posTagger.tag(tokens);
+			
+			for(int i =0;i<tags.length; i++) {
+			String tag = tags[i];
+				if(tag.equals("NNP") || tag.equals("NN") ||  tag.equals("JJ") ||  tag.equals("CD")) {
+					fet.add("'"+tokens[i]+"'");
+				}
+			}
+			
+			if(fet.size() > 0) {
+				feature = String.join(",", fet);
+				if(feature.length() > 220) { feature = feature.substring(0, 220);}
+				if(feature.substring(feature.length() - 1).equals(",") || feature.substring(feature.length() - 1).equals("]") ) {
+					feature=feature.substring(0,feature.length() - 1);
+					feature = "["+String.join(",", fet)+"]";
+				}else if (feature.substring(feature.length() - 1).equals("'") ) {
+					feature = "["+String.join(",", fet)+"]";
+				}else {
+					feature = "["+String.join(",", fet)+"']";
+				}
+				
+			}else {
+				feature = null;
+			}
+			
+		} catch (IOException e) {
+			logger.info("error during pos tagger",e);
+		}
+	   
+		return feature;
 	}
 
 
@@ -265,14 +318,22 @@ public class PageExtractor implements Callable<List<Reviews>>{
 	}
 	
 	public static void main(String[] args){
-		String url1 ="https://gadgets.ndtv.com/samsung-galaxy-a9s-5709";
-		String url2 ="https://www.digit.in/mobile-phones/xiaomi-mi-a2-price-125589.html";
-		String url3 = "https://shop.gadgetsnow.com/smartphones/lenovo-k8-note-64gb-black-4gb-ram-/10021/p_G28690";
-		String url4 = "https://gadgets.ndtv.com/vivo-z3i-standard-edition-8950";
-		String url5 ="https://gadgets.ndtv.com/samsung-m20-galaxy-8938";
-		String url6 ="https://www.consumerreports.org/products/smart-phone/sony-xperia-xz1-394729/overview/";
-		PageExtractor pageExtractor = new PageExtractor("https://gadgets.ndtv.com/",url6);
-		pageExtractor.run();
+		
+		  String url1 ="https://gadgets.ndtv.com/samsung-galaxy-a9s-5709"; String url2
+		  ="https://www.digit.in/mobile-phones/xiaomi-mi-a2-price-125589.html"; String
+		  url3 =
+		  "https://shop.gadgetsnow.com/smartphones/lenovo-k8-note-64gb-black-4gb-ram-/10021/p_G28690";
+		  String url4 = "https://gadgets.ndtv.com/vivo-z3i-standard-edition-8950";
+		  String url5 ="https://gadgets.ndtv.com/samsung-m20-galaxy-8938"; String url6
+		  ="https://www.consumerreports.org/products/smart-phone/sony-xperia-xz1-394729/overview/";
+		  PageExtractor pageExtractor = new
+		  PageExtractor("https://gadgets.ndtv.com/",url1); pageExtractor.run();
+		 
+		/*
+		 * PageExtractor pageExtractor = new
+		 * PageExtractor("https://gadgets.ndtv.com/",""); pageExtractor.processNLP("");
+		 */
+		 
 	}
 
 
