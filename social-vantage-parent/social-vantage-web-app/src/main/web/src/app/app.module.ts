@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 
 import { AppComponent } from './app.component';
 import {
@@ -51,15 +51,22 @@ import { SideCardComponent } from './side-card/side-card.component';
 import { ResultTableComponent } from './result-table/result-table.component';
 import { TaskStatusListComponent } from './task-status-list/task-status-list.component';
 import { TaskStatusDetailsComponent } from './task-status-details/task-status-details.component';
+import { SocialvrComponent } from './socialvr/socialvr.component';
+import { MainComponent } from './main/main.component';
+
 
 const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: MainComponent
   },
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'socialvr',
+    component: SocialvrComponent
   },
   {
     path: '**',
@@ -75,7 +82,9 @@ const routes: Routes = [
     SideCardComponent,
     ResultTableComponent,
     TaskStatusListComponent,
-    TaskStatusDetailsComponent
+    TaskStatusDetailsComponent,
+    SocialvrComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,
@@ -123,6 +132,7 @@ const routes: Routes = [
     CovalentMessageModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
