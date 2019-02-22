@@ -45,17 +45,18 @@ public class Worker {
 	@Autowired
 	private TaskStatusRepository taskStatusRepository;
 	
-	private void updateTaskStatus(int taskId, String searchTerm, int pagesize,int index) {
+	private void updateTaskStatus(int taskId, String searchTerm, int pagesize,int index, String imageUrl) {
 		String task ="Google_Crawl";
 		String status = "Submit";
 		TaskStatus taskStatus = new TaskStatus(taskId, task, status);
 		taskStatus.setSearch(searchTerm);
 		taskStatus.setIndex(index);
+		taskStatus.setImageUrl(imageUrl);
 		taskStatus.setPagesFound(pagesize);
 		taskStatusRepository.save(taskStatus);
 	}
 
-	public void dowork(String url, int taskId, String searchString, int index) {
+	public void dowork(String url,String imageUrl, int taskId, String searchString, int index) {
 		logger.info("URL :" + url);
 		Map<String, List<String>> map = new HashMap<>();
 		try {
@@ -71,7 +72,7 @@ public class Worker {
 			counter++;
 		}
 		
-		updateTaskStatus(taskId,searchString,map.size(),index);
+		updateTaskStatus(taskId,searchString,map.size(),index,imageUrl);
 	}
 
 	private void getAllLinks(String url, Map<String, List<String>> map) throws IOException {

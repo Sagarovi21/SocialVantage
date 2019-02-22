@@ -60,39 +60,44 @@ public class CustomGoogleSearchService {
 	public List<CustomResult> searchGoogleCustom(String searchTerm) throws Exception {
 		List<CustomResult> resultList = new ArrayList<>(100);
 		String output = customGoogleSearchEngine.search(searchTerm, 1);
-		JSONObject obj = new JSONObject(output);
-		try {
-			while (obj.getString("kind") != null) {
-				int nextStart = obj.getJSONObject("queries").getJSONArray("nextPage").getJSONObject(0)
-						.getInt("startIndex");
-				JSONArray jsonArray = obj.getJSONArray("items");
-				for (int i = 0; i < jsonArray.length(); i++) {
-					JSONObject temp = jsonArray.getJSONObject(i);
-					CustomResult result = new CustomResult();
-					result.setTitle(temp.getString("title"));
-					result.setUrl(temp.getString("link"));
-					try {
-						JSONArray array;
-						if ((array = temp.getJSONObject("pagemap").getJSONArray("cse_thumbnail")) != null) {
-							JSONObject imageJsonObject = array.getJSONObject(0);
-							Image image = new Image();
-							image.setHeight(imageJsonObject.getString("height"));
-							image.setWidth(imageJsonObject.getString("width"));
-							image.setSrc(imageJsonObject.getString("src"));
-							result.setImage(image);
+		if(output !=null) {
+			JSONObject obj = new JSONObject(output);
+			try {
+				while (obj.getString("kind") != null) {
+					int nextStart = obj.getJSONObject("queries").getJSONArray("nextPage").getJSONObject(0)
+							.getInt("startIndex");
+					JSONArray jsonArray = obj.getJSONArray("items");
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject temp = jsonArray.getJSONObject(i);
+						CustomResult result = new CustomResult();
+						result.setTitle(temp.getString("title"));
+						result.setUrl(temp.getString("link"));
+						try {
+							JSONArray array;
+							if ((array = temp.getJSONObject("pagemap").getJSONArray("cse_thumbnail")) != null) {
+								JSONObject imageJsonObject = array.getJSONObject(0); 
+								/*
+								 * Image image = new
+								 * Image(); image.setHeight(imageJsonObject.getString("height"));
+								 * image.setWidth(imageJsonObject.getString("width"));
+								 * image.setSrc(imageJsonObject.getString("src")); result.setImage(image);
+								 */
+								
+								result.setImgUrl(imageJsonObject.getString("src"));
+							}
+						} catch (JSONException e) {
+	
 						}
-					} catch (JSONException e) {
-
+						resultList.add(result);
 					}
-					resultList.add(result);
+					output = customGoogleSearchEngine.search(searchTerm, nextStart);
+					if (output == null)
+						break;
+					obj = new JSONObject(output);
 				}
-				output = customGoogleSearchEngine.search(searchTerm, nextStart);
-				if (output == null)
-					break;
-				obj = new JSONObject(output);
+			} catch (JSONException e) {
+	
 			}
-		} catch (JSONException e) {
-
 		}
 		return resultList;
 	}

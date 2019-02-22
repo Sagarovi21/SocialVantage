@@ -29,9 +29,10 @@ public class AsyncService {
 	private String crawlerUrl;
  
     @Async("asyncExecutor")
-    public void getGoogleSearch( int taskId, String searchString,String url,int index) 
+    public void getGoogleSearch( int taskId, String searchString,String url,String imageUrl,int index) 
     {
-    	String generatedUrl = crawlerUrl+"/"+taskId+"/"+searchString+"?index="+index+"&url="+url;
+    	String generatedUrl = crawlerUrl+"/"+taskId+"/"+
+    searchString+"?index="+index+"&url="+url+"&imageUrl="+imageUrl;
     	logger.info("getEmployeeName starts : "+generatedUrl);
     	
         restTemplate.getForObject(generatedUrl, Object.class);

@@ -23,7 +23,7 @@ public class CustomGoogleSearchEngine {
 	@Value("${google.cx}")
 	private String googleCX;
 
-	public String search(String searchTerm, int start) throws IOException {
+	public String search(String searchTerm, int start) {
 		logger.info("calling rest template"+start);
 		if (start > 100)
 			return null;
@@ -32,12 +32,19 @@ public class CustomGoogleSearchEngine {
 		for (String temp : spilletedSearchTerm)
 			sb.append(temp);
 		final String uri= String.format("https://www.googleapis.com/customsearch/v1?key=%s&cx=%s&q=%s&start=%d",accessKey.trim(), googleCX.trim(),sb.toString(),start);
+		logger.info(uri);
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
-		return result.getBody();
+		String body = null;
+		try {
+			ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+			body = result.getBody();
+		}catch(Exception e) {
+			logger.error("error while calling service",e);
+		}
+		return body;
 
 	}
 

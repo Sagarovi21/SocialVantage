@@ -36,10 +36,12 @@ public class CrwalingController {
 	@GetMapping(path = "/search/{taskId}/{searchTerm}", produces = "application/json")
 	@ResponseBody
 	public String searchGoogleCustom(@PathVariable("taskId") int taskId ,
-			@RequestParam("url") String url, @RequestParam("index") int index,
+			@RequestParam("url") String url,
+			@RequestParam("imageUrl") String imageUrl,
+			@RequestParam("index") int index,
 			@PathVariable("searchTerm") String searchTerm) throws Exception {
 		logger.info("Searching for "+searchTerm);
-		getWorker().dowork(url, taskId, searchTerm,  index);
+		getWorker().dowork(url,imageUrl, taskId, searchTerm,  index);
 		return "Done";
 	}
 	 

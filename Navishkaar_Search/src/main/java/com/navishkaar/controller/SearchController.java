@@ -86,7 +86,7 @@ public class SearchController {
 		List<CustomResult> results = customGoogleSearchService.searchGoogleCustom(searchTerm);
 		int index = 1;
 		for(CustomResult customResult: results) {
-			service.getGoogleSearch(taskId,searchTerm,customResult.getUrl(),index);
+			service.getGoogleSearch(taskId,searchTerm,customResult.getUrl(),customResult.getImgUrl(),index);
 			index++;
 		}
 		int size = results.size();
