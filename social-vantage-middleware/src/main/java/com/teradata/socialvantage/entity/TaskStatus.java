@@ -26,7 +26,6 @@ public class TaskStatus {
 	
 	@Column(name = "subidx")
     private int subIndex;
-	
 
 	@Column(name = "imageUrl", length = 300)
     private String imageUrl;
@@ -49,6 +48,14 @@ public class TaskStatus {
 	@Column(name = "task_status",length = 7)
     private String taskStatus;
 	
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
 	public int getIndex() {
 		return index;
 	}
